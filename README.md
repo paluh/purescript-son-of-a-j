@@ -7,7 +7,8 @@ Zero cost json serialization / deserialization for a subset of PureScript types.
 This library exploits internal JavaScript representations of some PureScript types to allow simple serialization and deserialization of their values.
 It provides simple `class SonJ a` which proofs serializiblity of a given type.
 
-Currently supported types are: `Number`, `String`, `Int`, `Boolean`, `Record`, `Variant` and newtypes around any serializable type.
+Currently supported types are: `Number`, `String`, `Int`, `Boolean`, `Record`, `Variant`, `Null` (defined internally) and `newtype` (with `Newtype` instance) around any serializable type.
+Users are not able to extend instance set as original instance chain is closed by fully polymorphic instance for the `newtype`... It is probably probably possible to implement your own `class` and instance chain with `SonJ` fallback.
 
 ## Usage
 
