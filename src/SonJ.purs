@@ -25,7 +25,7 @@ else instance stringSonJ ∷ SonJ String
 
 else instance booleanSonJ ∷ SonJ Boolean
 
-else instance nullableSonJ ∷ SonJ (Nullable a)
+else instance nullableSonJ ∷ SonJ a ⇒ SonJ (Nullable a)
 
 else instance recordSonJ ∷ (RowToList row rl, RowListSonJ rl) ⇒ SonJ (Record row)
 
