@@ -9,7 +9,7 @@ It provides simple `class SonJ a` which proofs serializiblity of a given type.
 
 Currently supported types are: `Number`, `String`, `Int`, `Boolean`, `Record`, `Variant`, `Null` (defined internally) and `newtype` (with `Newtype` instance) around any serializable type.
 
-Users are not able to extend instance set as implemented instance chain is closed by fully polymorphic instance for the `Newtype`... It is probably probably possible to implement your own `class` and instance chain with `SonJ` fallback though.
+Users are not able to extend instance set as implemented instance chain is closed by fully polymorphic instance for the `Newtype`... It is probably possible to implement your own `class` and instance chain with `SonJ` fallback though.
 
 ## Usage
 
