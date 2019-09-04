@@ -1,6 +1,6 @@
 # purescript-son-of-a-j
 
-Zero cost json serialization / deserialization for a subset of PureScript types.
+Zero cost json serialization and zero copy deserialization for a subset of PureScript types.
 
 ## Supported types
 
@@ -16,9 +16,16 @@ Users are not able to extend instance set as implemented instance chain is close
 ### API
 
 ```purescript
+
+-- | Nearly zero cost
+
 dump ∷ ∀ a. SonJ a ⇒ a → Json
 
 unsafeLoad ∷ ∀ a. SonJ a ⇒ Json → a
+
+-- | Zero copy + validation traverse cost (TODO: provide real error handling for `load`)
+
+load ∷ ∀ a. SonJ a ⇒ Json → Maybe a
 ```
 
 ### Example usage
@@ -26,8 +33,11 @@ unsafeLoad ∷ ∀ a. SonJ a ⇒ Json → a
 This is excerpt of `test/Main.purs`:
 
 ```purescript
-roundTrip ∷ ∀ a. SonJ a ⇒ a → Either String a
-roundTrip = SonJ.dump >>> stringify >>> jsonParser >>> map SonJ.unsafeLoad
+unsafeRoundTrip ∷ ∀ a. SonJ a ⇒ a → Maybe a
+unsafeRoundTrip = SonJ.dump >>> stringify >>> jsonParser >>> hush >>> map SonJ.unsafeLoad
+
+roundTrip ∷ ∀ a. SonJ a ⇒ a → Maybe a
+roundTrip = SonJ.dump >>> stringify >>> jsonParser >>> hush >=> SonJ.load
 
 type MaybeV a = Variant (just ∷ a, nothing ∷ Null)
 
@@ -43,13 +53,17 @@ derive instance newtypeX ∷ Newtype (X a b) _
 
 main ∷ Effect Unit
 main = do
-  logShow (roundTrip (just 8) == Right (just 8))
-  logShow (roundTrip (just 9) /= Right (just 8))
-  logShow (roundTrip (X {a: 8, b: just "test"}) == Right (X {a: 8, b: just "test"}))
-  logShow (roundTrip (X {a: 8, b: just "test"}) /= Right (X {a: 8, b: nothing }))
-  logShow (roundTrip (X {a: 8, b: nothing ∷ MaybeV Int}) == Right (X {a: 8, b: nothing }))
-```
+  logShow (unsafeRoundTrip (just 8) == Just (just 8))
+  logShow (unsafeRoundTrip (just 9) /= Just (just 8))
+  logShow (unsafeRoundTrip (X {a: 8, b: just "test"}) == Just (X {a: 8, b: just "test"}))
+  logShow (unsafeRoundTrip (X {a: 8, b: just "test"}) /= Just (X {a: 8, b: nothing }))
+  logShow (unsafeRoundTrip (X {a: 8, b: nothing ∷ MaybeV Int}) == Just (X {a: 8, b: nothing }))
 
-## Limitations
-As I'm in hurry it doesn't support any form of validation and provides only `unsafeLoad` as deserialization method.
+
+  logShow (roundTrip (just 8) == Just (just 8))
+  logShow (roundTrip (just 9) /= Just (just 8))
+  logShow (roundTrip (X {a: 8, b: just "test"}) == Just (X {a: 8, b: just "test"}))
+  logShow (roundTrip (X {a: 8, b: just "test"}) /= Just (X {a: 8, b: nothing }))
+  logShow (roundTrip (X {a: 8, b: nothing ∷ MaybeV Int}) == Just (X {a: 8, b: nothing }))
+```
 
