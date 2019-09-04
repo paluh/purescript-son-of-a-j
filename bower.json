@@ -3,6 +3,7 @@
   "authors": [
     "Tomasz Rybarczyk (aka paluh)"
   ],
+  "license": "BSD-3-Clause",
   "ignore": [
     "**/.*",
     "node_modules",
