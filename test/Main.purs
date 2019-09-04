@@ -30,7 +30,9 @@ derive instance newtypeX ∷ Newtype (X a b) _
 main ∷ Effect Unit
 main = do
   logShow (roundTrip (just 8) == Right (just 8))
-  logShow (roundTrip (just 9) == Right (just 8))
-  logShow (roundTrip (X {a: 8, b: "test"}) == Right (X {a: 8, b: "test"}))
+  logShow (roundTrip (just 9) /= Right (just 8))
+  logShow (roundTrip (X {a: 8, b: just "test"}) == Right (X {a: 8, b: just "test"}))
+  logShow (roundTrip (X {a: 8, b: just "test"}) /= Right (X {a: 8, b: nothing }))
+  logShow (roundTrip (X {a: 8, b: nothing ∷ MaybeV Int}) == Right (X {a: 8, b: nothing }))
 
 
