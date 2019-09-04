@@ -11,6 +11,16 @@ Currently supported types are: `Number`, `String`, `Int`, `Boolean`, `Record`, `
 
 ## Usage
 
+### API
+
+```purescript
+dump ∷ ∀ a. SonJ a ⇒ a → Json
+
+unsafeLoad ∷ ∀ a. SonJ a ⇒ Json → a
+```
+
+### Example usage
+
 This is excerpt of `test/Main.purs`:
 
 ```purescript
