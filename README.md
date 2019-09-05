@@ -2,11 +2,13 @@
 
 Zero cost json serialization and zero copy deserialization for a subset of PureScript types.
 
-## Goals
+## Goals and design
 
-[x] Provide serialization for types which are internally represented as valid JSON.
+[x] No extensibilty. No additional instances required. Works out of the box.
 
-[ ] Provide __efficient__ transformations to turn any other generic PureScript type (think `Sum`) to its serializable version.
+[x] Provide __efficient__ serialization for types which are internally represented as valid JSON.
+
+[ ] Provide __efficient__ transformations between any other generic PureScript type (think `Sum`) and it's json serializable version.
 
 ## Supported types
 
