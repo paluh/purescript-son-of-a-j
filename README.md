@@ -21,7 +21,7 @@ dump ∷ ∀ a. SonJ a ⇒ a → Json
 
 unsafeLoad ∷ ∀ a. SonJ a ⇒ Json → a
 
--- | Zero copy + validation traverse cost (TODO: provide real error handling for `load`)
+-- | Zero copy but with validation (json traversing) cost
 
 load ∷ ∀ a. SonJ a ⇒ Json → Maybe a
 ```

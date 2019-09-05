@@ -56,9 +56,8 @@ else instance sonJNull ∷ SonJ Null where
 else instance arraySonJ ∷ (SonJ a) ⇒ SonJ (Array a) where
   load json = (toArray >=> foldl step (Just null) $ json) *> Just (unsafeCoerce json)
     where
-      step accum elem = case accum of
-        Nothing → Nothing
-        otherwise → (load elem ∷ Maybe a) *> accum
+      -- | `(.. >>= \_ → ...)` is a lazy version of `*>`
+      step accum elem = accum >>= (\_ → (load elem ∷ Maybe a) *> accum)
 
 else instance newtypeSonJ ∷ (Newtype n a, SonJ a) ⇒ SonJ n where
   load = load >>> map wrap
@@ -72,7 +71,8 @@ instance nilRowListSonJ ∷ RowListSonJ row Nil where
   loadVariant _ _ = Nothing
 
 else instance consRowListSonJ ∷ (IsSymbol s, SonJ a, RowListSonJ row tail) ⇒ RowListSonJ row (Cons s a tail) where
-  loadObject _ obj = Object.lookup label obj *> loadObject tail obj
+  loadObject _ obj =
+    Object.lookup label obj >>= (load ∷ (Json → Maybe a)) >>= \_ → loadObject tail obj
     where
       label = reflectSymbol (SProxy ∷ SProxy s)
       tail = RLProxy ∷ RLProxy tail

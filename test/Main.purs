@@ -22,6 +22,9 @@ unsafeRoundTrip = SonJ.dump >>> stringify >>> jsonParser >>> hush >>> \parsed �
     then pure a
     else Nothing
 
+failTrip ∷ ∀ a b. SonJ a ⇒ SonJ b ⇒ b → Maybe a
+failTrip = SonJ.dump >>> stringify >>> jsonParser >>> hush >=> SonJ.load
+
 roundTrip ∷ ∀ a. SonJ a ⇒ a → Maybe a
 roundTrip = SonJ.dump >>> stringify >>> jsonParser >>> hush >>> \parsed → do
   json ← parsed
@@ -58,7 +61,7 @@ main = do
   logShow (roundTrip (just 8) == Just (just 8))
   logShow (roundTrip (just 9) /= Just (just 8))
   logShow (roundTrip (X {a: 8, b: just "test"}) == Just (X {a: 8, b: just "test"}))
-  logShow (roundTrip (X {a: 8, b: just "test"}) /= Just (X {a: 8, b: nothing }))
+  logShow (roundTrip (X {a: 8, b: just "test"}) /= Just (X {a: 10, b: nothing }))
   logShow (roundTrip (X {a: 8, b: nothing ∷ MaybeV Int}) == Just (X {a: 8, b: nothing }))
   logShow $ eq
     (roundTrip ([ X {a: 8, b: nothing }, X { a: 9, b: just 2 }]))
@@ -66,5 +69,5 @@ main = do
   logShow $ not $ eq
     (roundTrip ([ X {a: 8, b: nothing }, X { a: 9, b: just 8 }]))
     (Just ([ X {a: 8, b: nothing }, X { a: 9, b: just 2 }]))
-
+  logShow $ (failTrip (X {a: 8, b: "test"}) ∷ (Maybe (X Int Int))) == Nothing
 
