@@ -9,6 +9,12 @@ It provides simple `class SonJ a` which proofs serializiblity of a given type.
 
 Currently supported types are: `Number`, `String`, `Int`, `Boolean`, `Record`, `Variant`, `Array`, `Null` (defined internally) and `newtype` (with `Newtype` instance) around any serializable type.
 
+To use this lib user don't have to provide any instances at all.
+
+## Limitations
+
+This libary is not extensible by design as we want to support any `newtype` serialization out of the box. In other words our instance chain is closed by fully polymorphic instance for `Newtype` case.
+
 ## Usage
 
 ### API
