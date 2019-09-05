@@ -51,11 +51,20 @@ main = do
   logShow (unsafeRoundTrip (X {a: 8, b: just "test"}) == Just (X {a: 8, b: just "test"}))
   logShow (unsafeRoundTrip (X {a: 8, b: just "test"}) /= Just (X {a: 8, b: nothing }))
   logShow (unsafeRoundTrip (X {a: 8, b: nothing ∷ MaybeV Int}) == Just (X {a: 8, b: nothing }))
+  logShow $ eq
+    (unsafeRoundTrip ([ X {a: 8, b: nothing }, X { a: 9, b: just 2 }]))
+    (Just ([ X {a: 8, b: nothing }, X { a: 9, b: just 2 }]))
 
   logShow (roundTrip (just 8) == Just (just 8))
   logShow (roundTrip (just 9) /= Just (just 8))
   logShow (roundTrip (X {a: 8, b: just "test"}) == Just (X {a: 8, b: just "test"}))
   logShow (roundTrip (X {a: 8, b: just "test"}) /= Just (X {a: 8, b: nothing }))
   logShow (roundTrip (X {a: 8, b: nothing ∷ MaybeV Int}) == Just (X {a: 8, b: nothing }))
+  logShow $ eq
+    (roundTrip ([ X {a: 8, b: nothing }, X { a: 9, b: just 2 }]))
+    (Just ([ X {a: 8, b: nothing }, X { a: 9, b: just 2 }]))
+  logShow $ not $ eq
+    (roundTrip ([ X {a: 8, b: nothing }, X { a: 9, b: just 8 }]))
+    (Just ([ X {a: 8, b: nothing }, X { a: 9, b: just 2 }]))
 
 

@@ -2,10 +2,13 @@ module SonJ where
 
 import Prelude
 
-import Data.Argonaut (Json, isNull, toBoolean, toNumber, toObject, toString)
+import Data.Argonaut (Json, isNull, toArray, toBoolean, toNumber, toObject, toString)
+import Data.Array (foldl)
+import Data.Foldable (fold, foldMap)
 import Data.Int (fromNumber) as Int
 import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype, wrap)
+import Data.Traversable (traverse)
 import Data.Variant (Variant)
 import Data.Variant.Internal (VariantRep(..))
 import Foreign.Object (Object)
@@ -49,6 +52,13 @@ else instance sonJNull ∷ SonJ Null where
   load json = if isNull json
     then Just (unsafeCoerce json)
     else Nothing
+
+else instance arraySonJ ∷ (SonJ a) ⇒ SonJ (Array a) where
+  load json = (toArray >=> foldl step (Just null) $ json) *> Just (unsafeCoerce json)
+    where
+      step accum elem = case accum of
+        Nothing → Nothing
+        otherwise → (load elem ∷ Maybe a) *> accum
 
 else instance newtypeSonJ ∷ (Newtype n a, SonJ a) ⇒ SonJ n where
   load = load >>> map wrap
