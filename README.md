@@ -2,6 +2,12 @@
 
 Zero cost json serialization and zero copy deserialization for a subset of PureScript types.
 
+## Goals
+
+[x] Provide serialization for types which are internally represented as valid JSON.
+
+[ ] Provide __efficient__ transformations to turn any other generic PureScript type (think `Sum`) to its serializable version.
+
 ## Supported types
 
 This library exploits internal JavaScript representations of some PureScript types to allow simple serialization and deserialization of their values.
@@ -9,7 +15,7 @@ It provides simple `class SonJ a` which proofs serializiblity of a given type.
 
 Currently supported types are: `Number`, `String`, `Int`, `Boolean`, `Record`, `Variant`, `Array`, `Null` (defined internally) and `newtype` (with `Newtype` instance) around any serializable type.
 
-To use this lib user don't have to provide any instances at all.
+To use this lib user don't have to provide any instances at all (check `X` type in example below).
 
 ## Limitations
 
