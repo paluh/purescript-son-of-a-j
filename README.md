@@ -29,7 +29,7 @@ This libary is not extensible by design as we want to support any `newtype` seri
 
 ```purescript
 
--- | Nearly zero cost
+-- | Nearly zero cost - just `unsafeCoerce` with type class check :-P
 
 dump ∷ ∀ a. SonJ a ⇒ a → Json
 
