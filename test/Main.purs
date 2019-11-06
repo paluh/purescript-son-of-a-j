@@ -11,6 +11,9 @@ import Effect (Effect)
 import Effect.Class.Console (logShow)
 import SonJ (class SonJ, Null, null)
 import SonJ (dump, load, unsafeLoad) as SonJ
+import Test.SonJ.FromSonJ (suite) as Test.SonJ.FromSonJ
+import Test.SonJ.NTuple (suite) as Test.SonJ.NTuple
+import Test.Utils (refEq)
 import Type.Data.Symbol (SProxy(..))
 
 unsafeRoundTrip ∷ ∀ a. SonJ a ⇒ a → Maybe a
@@ -22,8 +25,8 @@ unsafeRoundTrip = SonJ.dump >>> stringify >>> jsonParser >>> hush >>> \parsed �
     then pure a
     else Nothing
 
-failTrip ∷ ∀ a b. SonJ a ⇒ SonJ b ⇒ b → Maybe a
-failTrip = SonJ.dump >>> stringify >>> jsonParser >>> hush >=> SonJ.load
+coerceTrip ∷ ∀ a b. SonJ a ⇒ SonJ b ⇒ b → Maybe a
+coerceTrip = SonJ.dump >>> stringify >>> jsonParser >>> hush >=> SonJ.load
 
 roundTrip ∷ ∀ a. SonJ a ⇒ a → Maybe a
 roundTrip = SonJ.dump >>> stringify >>> jsonParser >>> hush >>> \parsed → do
@@ -32,8 +35,6 @@ roundTrip = SonJ.dump >>> stringify >>> jsonParser >>> hush >>> \parsed → do
   if a `refEq` json
     then pure a
     else Nothing
-
-foreign import refEq ∷ ∀ a b. a → b → Boolean
 
 type MaybeV a = Variant (just ∷ a, nothing ∷ Null)
 
@@ -69,5 +70,8 @@ main = do
   logShow $ not $ eq
     (roundTrip ([ X {a: 8, b: nothing }, X { a: 9, b: just 8 }]))
     (Just ([ X {a: 8, b: nothing }, X { a: 9, b: just 2 }]))
-  logShow $ (failTrip (X {a: 8, b: "test"}) ∷ (Maybe (X Int Int))) == Nothing
+  logShow $ (coerceTrip (X {a: 8, b: "test"}) ∷ (Maybe (X Int Int))) == Nothing
+  logShow $ (coerceTrip (X {a: 8, b: "test"}) == Just { a: 8, b: "test" })
 
+  Test.SonJ.FromSonJ.suite
+  Test.SonJ.NTuple.suite
