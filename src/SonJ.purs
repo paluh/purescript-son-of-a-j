@@ -4,11 +4,9 @@ import Prelude
 
 import Data.Argonaut (Json, isNull, toArray, toBoolean, toNumber, toObject, toString)
 import Data.Array (foldl)
-import Data.Foldable (fold, foldMap)
 import Data.Int (fromNumber) as Int
 import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype, wrap)
-import Data.Traversable (traverse)
 import Data.Variant (Variant)
 import Data.Variant.Internal (VariantRep(..))
 import Foreign.Object (Object)

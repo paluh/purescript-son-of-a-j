@@ -40,7 +40,7 @@ unsafeLoad ∷ ∀ a. SonJ a ⇒ Json → a
 load ∷ ∀ a. SonJ a ⇒ Json → Maybe a
 ```
 
-### Example usage
+### Example
 
 This is excerpt of `test/Main.purs`:
 
