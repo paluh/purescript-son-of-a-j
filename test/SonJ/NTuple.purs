@@ -4,6 +4,7 @@ import Prelude
 
 import Effect (Effect)
 import Effect.Class.Console (log, logShow)
+import JS.Unsafe.Stringify (unsafeStringify)
 import SonJ.NTuple (cons, tuple) as NTuple
 
 suite ∷ Effect Unit
@@ -16,4 +17,5 @@ suite = do
   log "NTuple"
   logShow $ x == x'
   logShow $ x == y
+  logShow $ unsafeStringify x
   pure unit
