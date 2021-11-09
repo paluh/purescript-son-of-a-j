@@ -19,5 +19,7 @@
   , "unsafe-coerce"
   , "variant"
   ]
+, license = "BSD-3-Clause"
+, repository = "https://github.com/paluh/son-of-a-j.git"
 , packages = ./packages.dhall
 }
